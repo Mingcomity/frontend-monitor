@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		/* Visit https://aka.ms/tsconfig.json to read more about this file */
+		"target": "es2015",
+		"module": "es2015",
+		"rootDir": "./src",
+		"baseUrl": "./src",
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"skipLibCheck": true,
+		"moduleResolution": "Node",
+		"declaration": false,
+		"noEmit": false
+	},
+	"include": ["src/*.ts"]
+}

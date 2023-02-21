@@ -1,0 +1,16 @@
+{
+	"name": "frontend_sdk",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "esbuild ./src/index.js --outdir=./dist",
+		"build:min": "esbuild ./src/index.js --minify --outdir=./dist"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"esbuild": "^0.15.5"
+	}
+}
