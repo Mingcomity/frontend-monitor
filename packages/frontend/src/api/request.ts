@@ -7,11 +7,11 @@ const instance = axios.create({
   timeout: 15000
 })
 
-// 拦截器
+// 拦截器 —— 请求前
 instance.interceptors.request.use(
   (config) => {
     // 判断 post 请求，设置请求头部
-    if (config.method === 'post') {
+    if (config.method === 'post' || config.method === 'put') {
       config.headers.set('content-type', 'application/x-www-form-urlencoded')
     }
     const token = Cookies.get('token')
@@ -25,6 +25,7 @@ instance.interceptors.request.use(
     return Promise.reject(err)
   }
 )
+// 拦截器 —— 请求后
 instance.interceptors.response.use(
   (result) => {
     return result

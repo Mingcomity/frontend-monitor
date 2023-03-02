@@ -1,20 +1,44 @@
 <template>
-  <el-dropdown split-button size="large">
-    当前项目
+  <el-dropdown
+    split-button
+    size="large"
+    max-height="300"
+    @command="handleCommand"
+  >
+    当前项目:{{ theCurrentProject }}
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>Action 1</el-dropdown-item>
-        <el-dropdown-item>Action 2</el-dropdown-item>
-        <el-dropdown-item>Action 3</el-dropdown-item>
-        <el-dropdown-item>Action 4</el-dropdown-item>
-        <el-dropdown-item>Action 5</el-dropdown-item>
+        <el-dropdown-item
+          v-for="value in list"
+          :key="value.id"
+          :command="value.id"
+          >{{ value.name }}</el-dropdown-item
+        >
       </el-dropdown-menu>
     </template>
   </el-dropdown>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { computed } from 'vue'
+import { useProjectStore } from '@/stores/index'
+import { storeToRefs } from 'pinia'
+const projectInfo = useProjectStore()
+const { projectArr: list } = storeToRefs(projectInfo)
+// 修改已选项目
+const handleCommand = (id: number) => {
+  projectInfo.theCurrentProject = id
+}
+// 返回当前项目名
+const theCurrentProject = computed(() => {
+  if (projectInfo.projectArr) {
+    const project = projectInfo.projectArr.find(
+      (value) => value.id === projectInfo.theCurrentProject
+    )
+    return project?.name
+  }
+  return '暂无项目'
+})
 </script>
 <style scoped>
 :deep(.el-button-group) {

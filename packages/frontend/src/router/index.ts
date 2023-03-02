@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Cookies from 'js-cookie'
+import { useUserStore, useProjectStore } from '@/stores'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -10,27 +12,42 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     name: 'home',
     component: () => import('@/views/home/home.vue'),
-    redirect: '/home/overview',
+    redirect: '/home/setting',
     children: [
       {
         path: 'overview',
-        component: () => import('@/views/overview/index.vue')
+        component: () => import('@/views/overview/index.vue'),
+        meta: {
+          index: 0
+        }
       },
       {
         path: 'exception',
-        component: () => import('@/views/exception/index.vue')
+        component: () => import('@/views/exception/index.vue'),
+        meta: {
+          index: 1
+        }
       },
       {
         path: 'behavior',
-        component: () => import('@/views/behavior/index.vue')
+        component: () => import('@/views/behavior/index.vue'),
+        meta: {
+          index: 2
+        }
       },
       {
         path: 'performance',
-        component: () => import('@/views/performance/index.vue')
+        component: () => import('@/views/performance/index.vue'),
+        meta: {
+          index: 3
+        }
       },
       {
         path: 'setting',
-        component: () => import('@/views/setting/index.vue')
+        component: () => import('@/views/setting/index.vue'),
+        meta: {
+          index: 4
+        }
       }
     ]
   },
@@ -46,13 +63,28 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, _from) => {
-  const token = Cookies.get('token')
-  if (to.name === 'login') {
-    return true
-  }
-  if (!token) {
-    return 'login'
+router.beforeEach(async (to, _from) => {
+  try {
+    const token = Cookies.get('token')
+    if (to.name === 'login' && token) {
+      return '/home'
+    }
+    if (to.name === 'login') {
+      return true
+    }
+    if (!token) {
+      return 'login'
+    }
+    if (_from.name === 'login' && token) {
+      //放在引入后会导致pinia实例还未挂载就调用，所以需要在此处调用
+      const userInfo = useUserStore()
+      const projectInfo = useProjectStore()
+      await userInfo.getUserInfoAPi()
+      await projectInfo.getProjectInfo()
+      return true
+    }
+  } catch (error) {
+    console.error(error)
   }
 })
 export default router

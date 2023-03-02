@@ -14,7 +14,7 @@
       <el-input
         placeholder="username"
         type="text"
-        v-model="inputContent.username"
+        v-model.trim="inputContent.username"
       />
     </el-form-item>
 
@@ -22,7 +22,7 @@
       <el-input
         placeholder="password"
         type="password"
-        v-model="inputContent.pwd"
+        v-model.trim="inputContent.pwd"
       />
     </el-form-item>
 
@@ -41,6 +41,7 @@ import Cookie from 'js-cookie'
 import type { FormInstance, FormRules } from 'element-plus'
 import { adminLoginApi, adminRegisterApi } from '../../../api/api'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 
 const props = withDefaults(
@@ -51,7 +52,7 @@ const props = withDefaults(
     type: 'login'
   }
 )
-const className = computed(() => {
+const className = computed<string>(() => {
   if (props.type === 'login') {
     return 'sign-in-form'
   } else {
@@ -65,7 +66,7 @@ const inputContent = reactive<AdminLogin>({
   username: '',
   pwd: ''
 })
-
+// 用户名验证
 const verifyUsername = (
   rule: unknown,
   value: string,
@@ -77,6 +78,7 @@ const verifyUsername = (
     callback()
   }
 }
+// 登录时密码验证
 const verifyPasswordLogin = (
   rule: unknown,
   value: string,
@@ -88,6 +90,7 @@ const verifyPasswordLogin = (
     callback()
   }
 }
+// 注册时密码验证
 const verifyPasswordRegister = (
   rule: unknown,
   value: string,
@@ -117,13 +120,16 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
+
 // 登录按钮
 const loginApi = async (data: AdminLogin) => {
   try {
     const res = await adminLoginApi(data)
     if (res.data.code === 200) {
+      // 12 小时失效
+      const inHalfADay = 0.5
       Cookie.set('token', res.data.token, {
-        expires: 7
+        expires: inHalfADay
       })
       router.push('/home')
       //@ts-ignore
