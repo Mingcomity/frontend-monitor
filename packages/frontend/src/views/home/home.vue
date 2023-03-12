@@ -55,6 +55,10 @@ onBeforeRouteUpdate((to, from, next) => {
 })
 </script>
 <style scoped>
+:deep(.animate__faster) {
+  width: 100%;
+  height: 100%;
+}
 .el-container {
   height: 100%;
 }

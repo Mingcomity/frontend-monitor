@@ -137,8 +137,10 @@ const reviseProjectName = async (id: number) => {
   }
 }
 // 选择项目
-const chooseProject = (id: number) => {
+const chooseProject = async (id: number) => {
+  // 重新获取项目数据
   projectInfo.theCurrentProject = id
+  await userInfo.updatedProjectData()
 }
 </script>
 <style scoped>

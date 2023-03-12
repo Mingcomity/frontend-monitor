@@ -39,13 +39,23 @@ export const revisePwdApi = (data: RevisePwd): PromiseRes =>
   request.post('/user/pwd', data)
 
 // 获取项目信息
-export const getProjectInfo = (): PromiseRes<Project[]> =>
+export const getProjectInfoApi = (): PromiseRes<Project[]> =>
   request.get('/project')
 
 // 添加项目
-export const addProject = (data: AddProject): PromiseRes =>
+export const addProjectApi = (data: AddProject): PromiseRes =>
   request.post('/project', data)
 
 // 修改项目名称
 export const reviseProjectNameApi = (data: AddProject): PromiseRes =>
   request.put('/project', data)
+
+// 查询项目性能
+export const getPerformanceApi = (
+  data: GetPerformance
+): PromiseRes<Performance> => request.get('/perf', data)
+
+// 查询分段数据
+export const getSublevel = (
+  data: GetPerSublevel
+): PromiseRes<number[] | null[]> => request.get('/perf/seg', data)

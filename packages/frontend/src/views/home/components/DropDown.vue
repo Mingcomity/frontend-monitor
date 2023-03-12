@@ -21,13 +21,16 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useProjectStore } from '@/stores/index'
+import { useProjectStore, useUserStore } from '@/stores/index'
 import { storeToRefs } from 'pinia'
+
 const projectInfo = useProjectStore()
+const userInfo = useUserStore()
 const { projectArr: list } = storeToRefs(projectInfo)
 // 修改已选项目
-const handleCommand = (id: number) => {
+const handleCommand = async (id: number) => {
   projectInfo.theCurrentProject = id
+  await userInfo.updatedProjectData()
 }
 // 返回当前项目名
 const theCurrentProject = computed(() => {

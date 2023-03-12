@@ -1,14 +1,28 @@
 <template>
-  <div>performance</div>
+  <div class="main">
+    <PerCard></PerCard>
+    <div class="card">
+      <Carousel class="carousel"></Carousel>
+      <ListVue class="list"></ListVue>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import PerCard from './components/PerCard.vue'
+import Carousel from './components/Carousel.vue'
+import ListVue from './components/List.vue'
 </script>
 <style scoped>
-div {
-  width: 100%;
-  height: 100%;
-  background-color: aqua;
+.card {
+  display: flex;
+  margin-top: 2rem;
+}
+.carousel {
+  width: 60%;
+  margin-right: 2rem;
+}
+.list {
+  width: 40%;
 }
 </style>

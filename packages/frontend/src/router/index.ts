@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Cookies from 'js-cookie'
-import { useUserStore, useProjectStore } from '@/stores'
+import { useUserStore, useProjectStore, usePerformance } from '@/stores'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -81,6 +81,11 @@ router.beforeEach(async (to, _from) => {
       const projectInfo = useProjectStore()
       await userInfo.getUserInfoAPi()
       await projectInfo.getProjectInfo()
+      return true
+    }
+    if (token) {
+      const performance = usePerformance()
+      await performance.getPerformance()
       return true
     }
   } catch (error) {
