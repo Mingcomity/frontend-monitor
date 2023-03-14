@@ -1,5 +1,6 @@
 export const enum Names {
   User = 'User',
   Project = 'Project',
-  Performance = 'Performance'
+  Performance = 'Performance',
+  Behavior = 'Behavion'
 }

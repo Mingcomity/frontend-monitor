@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { Names } from './store-namespace'
+import { percentage } from '@/utils/percentage'
 import {
   getUserInfoAPi,
   reviseUsernameApi,
@@ -7,7 +8,13 @@ import {
   addProjectApi,
   reviseProjectNameApi,
   getPerformanceApi,
-  getSublevel
+  getSublevelApi,
+  getPvDataApi,
+  getPvRecordingApi,
+  getUvDataApi,
+  getUvRecordingApi,
+  getResidenceTimeApi,
+  getResidenceRecordingApi
 } from '@/api/api.js'
 
 // 用户信息
@@ -65,10 +72,14 @@ export const useUserStore = defineStore(Names.User, {
       // 性能数据获取
       const performance = usePerformance()
       await performance.getPerformance()
+      // 用户数据获取
+      const behavior = useBehavior()
+      await behavior.getBehvior()
     }
   }
 })
 
+// 项目信息
 interface ProjectList {
   // 当前项目
   theCurrentProject: number
@@ -80,8 +91,6 @@ interface ProjectList {
     SdkScript: string
   }[]
 }
-
-// 项目信息
 export const useProjectStore = defineStore(Names.Project, {
   state: (): ProjectList => {
     return {
@@ -166,6 +175,7 @@ export const useProjectStore = defineStore(Names.Project, {
   }
 })
 
+// 项目性能
 interface Performance {
   type: number
   average: number
@@ -177,8 +187,6 @@ interface Performance {
   sublevel: number[]
   enable: boolean
 }
-
-// 项目性能
 export const usePerformance = defineStore(Names.Performance, {
   state: (): {
     type: Map<number, string>
@@ -459,13 +467,13 @@ export const usePerformance = defineStore(Names.Performance, {
         }
         // 并发请求
         const resArr = await Promise.all([
-          getSublevel(queryArr[0]),
-          getSublevel(queryArr[1]),
-          getSublevel(queryArr[2]),
-          getSublevel(queryArr[3]),
-          getSublevel(queryArr[4]),
-          getSublevel(queryArr[5]),
-          getSublevel(queryArr[6])
+          getSublevelApi(queryArr[1]),
+          getSublevelApi(queryArr[0]),
+          getSublevelApi(queryArr[2]),
+          getSublevelApi(queryArr[3]),
+          getSublevelApi(queryArr[4]),
+          getSublevelApi(queryArr[5]),
+          getSublevelApi(queryArr[6])
         ])
         // 处理请求后的结果
         resArr.forEach((val, index) => {
@@ -484,6 +492,212 @@ export const usePerformance = defineStore(Names.Performance, {
           }
         })
       } catch (error) {}
+    }
+  }
+})
+
+// 用户行为
+interface Behavior {
+  browse: {
+    averageTime: number
+    rankingList: {
+      from: string
+      duration: number
+    }[]
+  }
+  uv: {
+    recent: number[]
+    rankingList: PvUvRecording[]
+  }
+  pv: {
+    recent: number[]
+    rankingList: PvUvRecording[]
+  }
+}
+export const useBehavior = defineStore(Names.Behavior, {
+  state: (): Behavior => {
+    return {
+      browse: {
+        averageTime: 0,
+        rankingList: []
+      },
+      pv: {
+        recent: [0, 0, 0, 0, 0, 0, 0],
+        rankingList: []
+      },
+      uv: {
+        recent: [0, 0, 0, 0, 0, 0, 0],
+        rankingList: []
+      }
+    }
+  },
+  getters: {
+    // 返回浏览总览数据
+    getUserOverview: function (): {
+      uv: {
+        value: number
+        contrast: number
+      }
+      pv: { value: number; contrast: number }
+      averageBrowsing: number
+    } {
+      return {
+        uv: {
+          value: this.uv.recent[this.uv.recent.length - 1],
+          contrast: percentage(
+            this.uv.recent[this.uv.recent.length - 2],
+            this.uv.recent[this.uv.recent.length - 1]
+          )
+        },
+        pv: {
+          value: this.pv.recent[this.pv.recent.length - 1],
+          contrast: percentage(
+            this.pv.recent[this.pv.recent.length - 2],
+            this.pv.recent[this.pv.recent.length - 1]
+          )
+        },
+        averageBrowsing: this.browse.averageTime
+      }
+    },
+    // 返回最近七天热门页面
+    getHotView: function (): {
+      from: string
+      pv: number
+      uv: number
+    }[] {
+      const arr: { from: string; pv: number; uv: number }[] = []
+      this.pv.rankingList.forEach((val) => {
+        const from = val.from
+        const pv = val.pv as number
+        const uv = this.uv.rankingList.find((value) => value.from === from)
+          ?.uv as number
+        arr.push({ from, pv, uv })
+      })
+      return arr
+    },
+    // 返回折线图数据
+    getLineChart: function (): {
+      Pv: number[]
+      Uv: number[]
+    } {
+      return {
+        Pv: this.pv.recent as number[],
+        Uv: this.uv.recent as number[]
+      }
+    }
+  },
+  actions: {
+    getBehvior: async function () {
+      try {
+        const project = useProjectStore()
+        await this.getPv(project.theCurrentProject)
+        await this.getUv(project.theCurrentProject)
+        await this.getBrowse(project.theCurrentProject)
+      } catch (error) {}
+    },
+    getUv: function (id: number) {
+      return new Promise<void>((resolve) => {
+        // 定义请求参数
+        const data = {
+          params: {
+            id
+          }
+        }
+        Promise.all([getUvDataApi(data), getUvRecordingApi(data)]).then(
+          (gets) => {
+            gets.forEach((val, index) => {
+              switch (index) {
+                case 0:
+                  if (val.data.code === 200 && val.data.data) {
+                    this.uv.recent = val.data.data as number[]
+                  } else if (val.data.code === 400) {
+                    this.uv.recent = [0, 0, 0, 0, 0, 0, 0]
+                  }
+                  break
+                case 1:
+                  if (val.data.code === 200 && val.data.data) {
+                    this.uv.rankingList = val.data.data as PvUvRecording[]
+                  } else if (val.data.code === 400) {
+                    this.uv.rankingList = []
+                  }
+                  break
+                default:
+                  break
+              }
+            })
+            resolve()
+          }
+        )
+      }).catch((e) => console.error(e))
+    },
+    getPv: function (id: number) {
+      return new Promise<void>((resolve) => {
+        // 定义请求参数
+        const data = {
+          params: {
+            id
+          }
+        }
+        Promise.all([getPvDataApi(data), getPvRecordingApi(data)]).then(
+          (gets) => {
+            gets.forEach((val, index) => {
+              switch (index) {
+                case 0:
+                  if (val.data.code === 200 && val.data.data) {
+                    this.pv.recent = val.data.data as number[]
+                  } else if (val.data.code === 400) {
+                    this.pv.recent = [0, 0, 0, 0, 0, 0, 0]
+                  }
+                  break
+                case 1:
+                  if (val.data.code === 200 && val.data.data) {
+                    this.pv.rankingList = val.data.data as PvUvRecording[]
+                  } else if (val.data.code === 400) {
+                    this.pv.rankingList = []
+                  }
+                  break
+                default:
+                  break
+              }
+            })
+            resolve()
+          }
+        )
+      }).catch((e) => console.error(e))
+    },
+    getBrowse: function (id: number) {
+      return new Promise<void>((resolve, reject) => {
+        // 定义请求参数
+        const data = {
+          id
+        }
+        Promise.all([
+          getResidenceTimeApi(data),
+          getResidenceRecordingApi(data)
+        ]).then((gets) => {
+          gets.forEach((val, index) => {
+            switch (index) {
+              case 0:
+                if (val.data.code === 200 && val.data.data) {
+                  this.browse.averageTime = val.data.data as number
+                } else {
+                  this.browse.averageTime = 0
+                }
+                break
+              case 1:
+                if (val.data.code === 200 && val.data.data) {
+                  this.browse.rankingList = val.data.data as Browse[]
+                } else {
+                  this.browse.rankingList = []
+                }
+                break
+              default:
+                break
+            }
+          })
+          resolve()
+        })
+      })
     }
   }
 })

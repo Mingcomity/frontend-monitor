@@ -56,6 +56,32 @@ export const getPerformanceApi = (
 ): PromiseRes<Performance> => request.get('/perf', data)
 
 // 查询分段数据
-export const getSublevel = (
+export const getSublevelApi = (
   data: GetPerSublevel
 ): PromiseRes<number[] | null[]> => request.get('/perf/seg', data)
+
+// 查询PV最近七天数据
+export const getPvDataApi = (data: {
+  params: { id: number }
+}): PromiseRes<number[]> => request.get('/behavior/visit/pv', data)
+// 查询PV记录
+export const getPvRecordingApi = (data: {
+  params: { id: number }
+}): PromiseRes<PvUvRecording[]> => request.get('/behavior/popular/pv', data)
+
+// 查询UV最近七天数据
+export const getUvDataApi = (data: {
+  params: { id: number }
+}): PromiseRes<number[]> => request.get('/behavior/visit/uv', data)
+// 查询UV记录
+export const getUvRecordingApi = (data: {
+  params: { id: number }
+}): PromiseRes<PvUvRecording[]> => request.get('/behavior/popular/uv', data)
+
+// 查询平均停留时间
+export const getResidenceTimeApi = (data: { id: number }): PromiseRes<number> =>
+  request.get(`/behavior/stay/${data.id}`)
+// 查询停留时间记录
+export const getResidenceRecordingApi = (data: {
+  id: number
+}): PromiseRes<Browse[]> => request.get(`/behavior/stay/${data.id}?list=1`)

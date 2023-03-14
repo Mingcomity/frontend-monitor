@@ -47,3 +47,16 @@ interface Performance {
     value: number
   }[]
 }
+
+// 查询PVUV记录返回值
+interface PvUvRecording {
+  from: string
+  pv?: number
+  uv?: number
+}
+
+// 查询停留时间返回值
+interface Browse {
+  from: string
+  duration: number
+}

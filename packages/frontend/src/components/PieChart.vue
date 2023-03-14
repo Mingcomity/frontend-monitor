@@ -3,10 +3,8 @@
   <div ref="myChart" class="chart" style="width: 100%; height: 100%"></div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, onBeforeUpdate, nextTick } from 'vue'
+import { onMounted, ref, onBeforeUpdate, nextTick, watchEffect } from 'vue'
 import * as echarts from 'echarts'
-import { getCurrentInstance } from 'vue'
-const { proxy } = getCurrentInstance() as any
 
 const props = defineProps<{
   title: string
@@ -39,7 +37,7 @@ const disposition = (data: {
     tooltip: {
       // 提示框
       trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)'
+      formatter: '{b} : {c} ({d}%)'
     },
     legend: {
       // 组件离下侧的距离
@@ -67,33 +65,7 @@ const disposition = (data: {
     ]
   }
 }
-// 数据更新后配置项
-const updata = (data: {
-  title: string
-  data: {
-    textArr: string[]
-    valueArr: {
-      value: number
-      name: string
-    }[]
-  }
-}) => {
-  return {
-    title: {
-      // 标题
-      text: data.title
-    },
 
-    legend: {
-      data: data.data.textArr
-    },
-    series: [
-      {
-        data: data.data.valueArr
-      }
-    ]
-  }
-}
 //通过ref获取html元素
 const myChart = ref()
 let userEc: any, infoEl
@@ -113,14 +85,13 @@ onMounted(async () => {
   // 使用刚指定的配置项和数据显示图表。
   userEc.setOption(option)
   // proxy.$echartsResize(userEc)
-})
-onBeforeUpdate(async () => {
-  await nextTick()
-  // 指定图表的配置项和数据
-  const option = disposition(props)
+  watchEffect(() => {
+    // 指定图表的配置项和数据
+    const option = disposition(props)
 
-  // 使用刚指定的配置项和数据显示图表。
-  userEc.setOption(option)
+    // 使用刚指定的配置项和数据显示图表。
+    userEc.setOption(option)
+  })
 })
 </script>
 <style scoped></style>
