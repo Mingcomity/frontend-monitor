@@ -24,28 +24,29 @@ const position = joi.string().max(255).required()
 const value = joi.number().required()
 
 const reg_addexceptionData_schema = {
-	body: {
-		key,
-		type,
-		msg,
-		position,
-	},
+  body: {
+    key,
+    type,
+    msg,
+    position
+  }
 }
 
 const req_queryexceptionData_schema = {
-	query: {
-		id: joi.number().required(),
-		type: joi.number().valid(1, 2, 3, 4),
-		page: joi.number(),
-		limit: joi.number(),
-	},
+  query: {
+    id: joi.number().required(),
+    time: joi.string().required()
+  }
 }
 
 const req_queryRecentExceptionData_schema = {
-	query: {
-		id: joi.number().required(),
-		type: joi.number().valid(1, 2, 3, 4),
-	},
+  query: {
+    id: joi.number().required()
+  }
 }
 
-export { reg_addexceptionData_schema, req_queryexceptionData_schema, req_queryRecentExceptionData_schema }
+export {
+  reg_addexceptionData_schema,
+  req_queryexceptionData_schema,
+  req_queryRecentExceptionData_schema
+}
