@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 25rem; position: relative">
     <header class="header">
       <div class="title">异常数据总览</div>
       <throwsAnException></throwsAnException>

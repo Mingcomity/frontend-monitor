@@ -1,11 +1,13 @@
 <template>
   <div>
-    <header class="title">性能统计</header>
+    <header class="header">
+      <div class="title">性能统计</div>
+    </header>
     <el-carousel
       indicator-position="outside"
-      :interval="6000"
+      :interval="5000"
       class="carouselChart"
-      :autoplay="false"
+      :autoplay="true"
     >
       <el-carousel-item v-for="item in data" :key="item.type">
         <PieChart :title="item.typeText" :data="item.data"></PieChart>
@@ -22,10 +24,12 @@ const performance = usePerformance()
 const { getcarouselPieChart: data } = storeToRefs(performance)
 </script>
 <style scoped>
-.title {
-  height: 2rem;
-  font-weight: 600;
+.header {
   margin-bottom: 1rem;
+  height: 2rem;
+}
+.title {
+  font-weight: 600;
 }
 .carouselChart {
   border: 1px solid var(--el-border-color);

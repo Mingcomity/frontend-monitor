@@ -2,7 +2,7 @@
   <!--  通过ref获取html元素 宽高必须设置 -->
   <div class="div">
     <header class="header">
-      <div class="title">统计折线表</div>
+      <div class="title">访问情况统计</div>
     </header>
     <main class="main">
       <div ref="myChart" class="chart"></div>
@@ -124,9 +124,6 @@ onMounted(async () => {
 .header {
   margin-bottom: 1rem;
   height: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 .title {
   font-weight: 600;
