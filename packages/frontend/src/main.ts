@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import router from './router'
 import App from './App.vue'
 // 谷歌控制台报错
-import 'default-passive-events'
+// import 'default-passive-events'
 import { createPinia } from 'pinia'
 import '@/assets/rebase.css'
 // pinia 持久化插件

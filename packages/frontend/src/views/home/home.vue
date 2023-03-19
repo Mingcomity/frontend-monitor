@@ -1,14 +1,14 @@
 <template>
-  <el-container>
+  <el-container class="container">
     <el-header class="header">
       <h1 class="title">前端监控系统</h1>
       <DropDown></DropDown>
     </el-header>
     <el-container>
       <aside class="aside">
-        <Menu></Menu>
+        <Menu @on-click="controlMenu"></Menu>
       </aside>
-      <el-main class="main">
+      <el-main class="main" :class="{ controlMain: menu }">
         <RouterView v-slot="{ Component }">
           <transition
             class="animate__faster"
@@ -30,6 +30,11 @@ import 'animate.css'
 import DropDown from './components/DropDown.vue'
 import Menu from './components/Menu.vue'
 import { onBeforeRouteUpdate } from 'vue-router'
+const menu = ref<boolean>()
+// 子传父函数
+const controlMenu = (control: boolean) => {
+  menu.value = control
+}
 // 前缀
 const prefix = 'animate__animated'
 // 下入
@@ -55,6 +60,9 @@ onBeforeRouteUpdate((to, from, next) => {
 })
 </script>
 <style scoped>
+.container {
+  width: 100%;
+}
 :deep(.animate__faster) {
   width: 100%;
   height: 100%;
@@ -64,10 +72,31 @@ onBeforeRouteUpdate((to, from, next) => {
 }
 .header {
   display: flex;
+  position: relative;
   justify-content: space-between;
   border-bottom: 1px solid var(--el-border-color);
+  user-select: none;
 }
-
+.aside {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  height: calc(100vh - var(--el-header-height));
+  overflow-y: auto;
+}
+.main {
+  position: absolute;
+  top: 60px;
+  left: 200px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  height: calc(100vh - var(--el-header-height));
+  transition: all 500ms;
+}
+.controlMain {
+  left: 60px;
+}
 .title {
   display: flex;
   font-weight: 500;

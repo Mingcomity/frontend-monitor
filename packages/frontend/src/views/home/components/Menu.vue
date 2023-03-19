@@ -30,7 +30,7 @@
       </el-menu>
     </div>
     <div class="btn">
-      <el-button text @click="isCollapse = !isCollapse">
+      <el-button text @click="send()">
         <el-icon v-if="isCollapse"><IEpExpand /></el-icon>
         <el-icon v-if="!isCollapse"><IEpFold /></el-icon>
       </el-button>
@@ -43,6 +43,13 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 const isCollapse = ref(false)
 const router = useRouter()
+const emit = defineEmits<{
+  (e: 'on-click', control: boolean): void
+}>()
+const send = () => {
+  isCollapse.value = !isCollapse.value
+  emit('on-click', isCollapse.value)
+}
 </script>
 <style scoped>
 .menu-vertical:not(.el-menu--collapse) {

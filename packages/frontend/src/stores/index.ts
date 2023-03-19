@@ -14,7 +14,9 @@ import {
   getUvDataApi,
   getUvRecordingApi,
   getResidenceTimeApi,
-  getResidenceRecordingApi
+  getResidenceRecordingApi,
+  getDailyExceptionApi,
+  getExceptionListApi
 } from '@/api/api.js'
 
 // 用户信息
@@ -35,36 +37,28 @@ export const useUserStore = defineStore(Names.User, {
     },
     // 获取用户信息
     getUserInfoAPi: async function () {
-      try {
-        const res = await getUserInfoAPi()
-        if (res.data.code === 200) {
-          this.updateUserInfo(res.data.data as UserInfo)
-        } else {
-          //@ts-ignore
-          ElMessage(res.data.message)
-        }
-      } catch (error) {
-        console.error(error)
+      const res = await getUserInfoAPi()
+      if (res.data.code === 200) {
+        this.updateUserInfo(res.data.data as UserInfo)
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
       }
     },
     // 更新用户名
     reviseUsername: async function (data: UserInfo) {
-      try {
-        const res = await reviseUsernameApi(data)
-        if (res.data.code === 200) {
-          // 重新获取用户信息
-          await this.getUserInfoAPi()
-          //@ts-ignore
-          ElMessage({
-            type: 'success',
-            message: `Your name is:${data.username}`
-          })
-        } else {
-          //@ts-ignore
-          ElMessage(res.data.message)
-        }
-      } catch (error) {
-        console.error(error)
+      const res = await reviseUsernameApi(data)
+      if (res.data.code === 200) {
+        // 重新获取用户信息
+        await this.getUserInfoAPi()
+        //@ts-ignore
+        ElMessage({
+          type: 'success',
+          message: `新的用户名为:${data.username}`
+        })
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
       }
     },
     // 更新项目信息
@@ -75,6 +69,9 @@ export const useUserStore = defineStore(Names.User, {
       // 用户数据获取
       const behavior = useBehavior()
       await behavior.getBehvior()
+      // 异常数据获取
+      const exception = useExceptionStore()
+      await exception.getException()
     }
   }
 })
@@ -117,59 +114,49 @@ export const useProjectStore = defineStore(Names.Project, {
     },
     // 获取项目信息
     getProjectInfo: async function () {
-      try {
-        const res = await getProjectInfoApi()
-        if (res.data.code === 200) {
-          this.updatedProjectInfo(res.data.data as Project[])
-        } else if (res.data.code === 400) {
-          // 清除项目数据
-          this.projectArr = []
-          //@ts-ignore
-          ElMessage(res.data.message)
-        } else {
-          //@ts-ignore
-          ElMessage(res.data.message)
-        }
-      } catch (error) {
-        console.error(error)
+      const res = await getProjectInfoApi()
+      if (res.data.code === 200) {
+        this.updatedProjectInfo(res.data.data as Project[])
+      } else if (res.data.code === 400) {
+        // 清除项目数据
+        this.projectArr = []
+        //@ts-ignore
+        ElMessage(res.data.message)
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
       }
     },
     // 添加项目
     addProject: async function (data: AddProject) {
-      try {
-        const res = await addProjectApi(data)
-        if (res.data.code === 200) {
-          // 重新获取项目信息
-          await this.getProjectInfo()
-          //@ts-ignore
-          ElMessage({
-            type: 'success',
-            message: `添加成功`
-          })
-        } else {
-          //@ts-ignore
-          ElMessage(res.data.message)
-        }
-      } catch (error) {}
+      const res = await addProjectApi(data)
+      if (res.data.code === 200) {
+        // 重新获取项目信息
+        await this.getProjectInfo()
+        //@ts-ignore
+        ElMessage({
+          type: 'success',
+          message: `添加成功`
+        })
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
+      }
     },
     // 修改项目名称
     reviseProjectName: async function (data: AddProject) {
-      try {
-        const res = await reviseProjectNameApi(data)
-        if (res.data.code === 200) {
-          // 重新获取项目信息
-          await this.getProjectInfo()
-          //@ts-ignore
-          ElMessage({
-            type: 'success',
-            message: `修改成功`
-          })
-        } else {
-          //@ts-ignore
-          ElMessage(res.data.message)
-        }
-      } catch (error) {
-        console.error(error)
+      const res = await reviseProjectNameApi(data)
+      if (res.data.code === 200) {
+        // 重新获取项目信息
+        await this.getProjectInfo()
+        //@ts-ignore
+        ElMessage({
+          type: 'success',
+          message: `修改成功`
+        })
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
       }
     }
   }
@@ -373,125 +360,119 @@ export const usePerformance = defineStore(Names.Performance, {
     // 获取性能数据
     getPerformance: async function (data?: GetPerformance) {
       const arr: Performance[] = []
-      try {
-        const project = useProjectStore()
-        if (data) {
-          const res = await getPerformanceApi(data)
-          if (res.data.code === 200) {
-            const performance = this.performance.find(
-              (val) => val.type === data.params.type
-            )
-            if (performance && res.data.data) {
-              performance.page = data.params.page
-              performance.list = res.data.data.list
-            }
-          } else {
-            //@ts-ignore
-            ElMessage(val.data.message)
+      const project = useProjectStore()
+      if (data) {
+        const res = await getPerformanceApi(data)
+        if (res.data.code === 200) {
+          const performance = this.performance.find(
+            (val) => val.type === data.params.type
+          )
+          if (performance && res.data.data) {
+            performance.page = data.params.page
+            performance.list = res.data.data.list
           }
         } else {
-          // 请求参数列表
-          const parameterList: GetPerformance[] = []
-          for (let i = 1; i <= 7; i++) {
-            const params = {
-              params: {
-                id: project.theCurrentProject,
-                type: i,
-                page: 0,
-                limit: 100000
-              }
-            }
-            parameterList.push(params)
-          }
-          // 并发请求
-          const resArr = await Promise.all([
-            getPerformanceApi(parameterList[0]),
-            getPerformanceApi(parameterList[1]),
-            getPerformanceApi(parameterList[2]),
-            getPerformanceApi(parameterList[3]),
-            getPerformanceApi(parameterList[4]),
-            getPerformanceApi(parameterList[5]),
-            getPerformanceApi(parameterList[6])
-          ])
-          // 请求结果处理
-          resArr.forEach((val, index) => {
-            if (val.data.code === 200) {
-              if (val.data.data) {
-                const res: Performance = {
-                  type: index + 1,
-                  average: val.data.data.avg,
-                  page: 0,
-                  list: val.data.data.list,
-                  sublevel: [0, 0, 0, 0, 0],
-                  enable: index + 1 === 4 ? false : true
-                }
-                arr.push(res)
-              }
-            } else if (val.data.code === 400) {
-              arr.push({
-                type: index + 1,
-                average: 0,
-                page: 0,
-                list: [],
-                sublevel: [],
-                enable: index + 1 === 4 ? false : true
-              })
-            } else {
-              //@ts-ignore
-              ElMessage(val.data.message)
-            }
-          })
-          await this.getSublevel(arr)
-          this.performance = arr
+          //@ts-ignore
+          ElMessage(val.data.message)
         }
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    // 获取分段数据
-    getSublevel: async function (carrier: Performance[]): Promise<void> {
-      try {
-        const project = useProjectStore()
-        const queryArr: GetPerSublevel[] = []
-        // 创建请求列表
+      } else {
+        // 请求参数列表
+        const parameterList: GetPerformance[] = []
         for (let i = 1; i <= 7; i++) {
-          const query: GetPerSublevel = {
+          const params = {
             params: {
               id: project.theCurrentProject,
-              day: 1000,
               type: i,
-              seg: this.sublevelDate.get(i)?.join(',') as string
+              page: 0,
+              limit: 100000
             }
           }
-          queryArr.push(query)
+          parameterList.push(params)
         }
         // 并发请求
         const resArr = await Promise.all([
-          getSublevelApi(queryArr[1]),
-          getSublevelApi(queryArr[0]),
-          getSublevelApi(queryArr[2]),
-          getSublevelApi(queryArr[3]),
-          getSublevelApi(queryArr[4]),
-          getSublevelApi(queryArr[5]),
-          getSublevelApi(queryArr[6])
+          getPerformanceApi(parameterList[0]),
+          getPerformanceApi(parameterList[1]),
+          getPerformanceApi(parameterList[2]),
+          getPerformanceApi(parameterList[3]),
+          getPerformanceApi(parameterList[4]),
+          getPerformanceApi(parameterList[5]),
+          getPerformanceApi(parameterList[6])
         ])
-        // 处理请求后的结果
+        // 请求结果处理
         resArr.forEach((val, index) => {
           if (val.data.code === 200) {
-            const performance = carrier.find((val) => val.type === index + 1)
-            if (performance && val.data.data) {
-              if (val.data.data[0] === null) {
-                performance.sublevel = [0, 0, 0, 0, 0]
-              } else {
-                performance.sublevel = val.data.data as number[]
+            if (val.data.data) {
+              const res: Performance = {
+                type: index + 1,
+                average: val.data.data.avg,
+                page: 0,
+                list: val.data.data.list,
+                sublevel: [0, 0, 0, 0, 0],
+                enable: index + 1 === 4 ? false : true
               }
+              arr.push(res)
             }
+          } else if (val.data.code === 400) {
+            arr.push({
+              type: index + 1,
+              average: 0,
+              page: 0,
+              list: [],
+              sublevel: [],
+              enable: index + 1 === 4 ? false : true
+            })
           } else {
             //@ts-ignore
             ElMessage(val.data.message)
           }
         })
-      } catch (error) {}
+        await this.getSublevel(arr)
+        this.performance = arr
+      }
+    },
+    // 获取分段数据
+    getSublevel: async function (carrier: Performance[]): Promise<void> {
+      const project = useProjectStore()
+      const queryArr: GetPerSublevel[] = []
+      // 创建请求列表
+      for (let i = 1; i <= 7; i++) {
+        const query: GetPerSublevel = {
+          params: {
+            id: project.theCurrentProject,
+            day: 1000,
+            type: i,
+            seg: this.sublevelDate.get(i)?.join(',') as string
+          }
+        }
+        queryArr.push(query)
+      }
+      // 并发请求
+      const resArr = await Promise.all([
+        getSublevelApi(queryArr[1]),
+        getSublevelApi(queryArr[0]),
+        getSublevelApi(queryArr[2]),
+        getSublevelApi(queryArr[3]),
+        getSublevelApi(queryArr[4]),
+        getSublevelApi(queryArr[5]),
+        getSublevelApi(queryArr[6])
+      ])
+      // 处理请求后的结果
+      resArr.forEach((val, index) => {
+        if (val.data.code === 200) {
+          const performance = carrier.find((val) => val.type === index + 1)
+          if (performance && val.data.data) {
+            if (val.data.data[0] === null) {
+              performance.sublevel = [0, 0, 0, 0, 0]
+            } else {
+              performance.sublevel = val.data.data as number[]
+            }
+          }
+        } else {
+          //@ts-ignore
+          ElMessage(val.data.message)
+        }
+      })
     }
   }
 })
@@ -588,12 +569,10 @@ export const useBehavior = defineStore(Names.Behavior, {
   },
   actions: {
     getBehvior: async function () {
-      try {
-        const project = useProjectStore()
-        await this.getPv(project.theCurrentProject)
-        await this.getUv(project.theCurrentProject)
-        await this.getBrowse(project.theCurrentProject)
-      } catch (error) {}
+      const project = useProjectStore()
+      await this.getPv(project.theCurrentProject)
+      await this.getUv(project.theCurrentProject)
+      await this.getBrowse(project.theCurrentProject)
     },
     getUv: function (id: number) {
       return new Promise<void>((resolve) => {
@@ -622,6 +601,8 @@ export const useBehavior = defineStore(Names.Behavior, {
                   }
                   break
                 default:
+                  //@ts-ignore
+                  ElMessage(val.data.message)
                   break
               }
             })
@@ -657,9 +638,12 @@ export const useBehavior = defineStore(Names.Behavior, {
                   }
                   break
                 default:
+                  //@ts-ignore
+                  ElMessage(val.data.message)
                   break
               }
             })
+
             resolve()
           }
         )
@@ -692,12 +676,69 @@ export const useBehavior = defineStore(Names.Behavior, {
                 }
                 break
               default:
+                //@ts-ignore
+                ElMessage(val.data.message)
                 break
             }
           })
+
           resolve()
         })
       })
+    }
+  }
+})
+
+// 异常监控
+interface Exception {
+  dailyData: any[]
+  exceptionList: ExceptionList[]
+}
+export const useExceptionStore = defineStore(Names.Exception, {
+  state(): Exception {
+    return {
+      dailyData: [],
+      exceptionList: []
+    }
+  },
+  getters: {},
+  actions: {
+    getException: async function () {
+      await this.getDailyException()
+      await this.getExceptionList()
+    },
+    // 查询每日异常数据总和
+    getDailyException: async function (time?: string) {
+      const project = useProjectStore()
+      const query: getException = {
+        params: {
+          id: project.theCurrentProject,
+          time: time ? time : '2023-02-11'
+        }
+      }
+      const res = await getDailyExceptionApi(query)
+      if (res.data.code === 200 && res.data.data) {
+        this.dailyData = res.data.data
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
+      }
+    },
+    // 查询异常数据列表
+    getExceptionList: async function () {
+      const project = useProjectStore()
+      const query = {
+        params: {
+          id: project.theCurrentProject
+        }
+      }
+      const res = await getExceptionListApi(query)
+      if (res.data.code === 200 && res.data.data) {
+        this.exceptionList = res.data.data
+      } else {
+        //@ts-ignore
+        ElMessage(res.data.message)
+      }
     }
   }
 })

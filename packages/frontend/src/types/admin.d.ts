@@ -60,3 +60,18 @@ interface Browse {
   from: string
   duration: number
 }
+
+// 查询每日异常数据总和
+interface getException {
+  params: {
+    id: number
+    time: string
+  }
+}
+// 返回异常数据列表
+interface ExceptionList {
+  msg: string
+  position: string
+  time: string
+  name: string
+}

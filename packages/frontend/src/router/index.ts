@@ -5,7 +5,8 @@ import {
   useUserStore,
   useProjectStore,
   usePerformance,
-  useBehavior
+  useBehavior,
+  useExceptionStore
 } from '@/stores'
 
 const routes: RouteRecordRaw[] = [
@@ -91,8 +92,10 @@ router.beforeEach(async (to, _from) => {
     if (token) {
       const behavior = useBehavior()
       const performance = usePerformance()
+      const exception = useExceptionStore()
       await performance.getPerformance()
       await behavior.getBehvior()
+      await exception.getException()
       return true
     }
   } catch (error) {

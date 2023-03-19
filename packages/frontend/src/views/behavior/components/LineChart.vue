@@ -1,11 +1,11 @@
 <template>
   <!--  通过ref获取html元素 宽高必须设置 -->
-  <div>
+  <div class="div">
     <header class="header">
       <div class="title">统计折线表</div>
     </header>
     <main class="main">
-      <div ref="myChart" class="chart" style="width: 100%; height: 100%"></div>
+      <div ref="myChart" class="chart"></div>
     </main>
   </div>
 </template>
@@ -112,6 +112,15 @@ onMounted(async () => {
 })
 </script>
 <style scoped>
+.div {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+.chart {
+  width: 100%;
+  height: 100%;
+}
 .header {
   margin-bottom: 1rem;
   height: 2rem;
@@ -123,8 +132,8 @@ onMounted(async () => {
   font-weight: 600;
 }
 .main {
-  padding-top: 1rem;
+  padding-top: 2rem;
   border: 1px solid var(--el-border-color);
-  height: 18.2rem;
+  height: 100%;
 }
 </style>

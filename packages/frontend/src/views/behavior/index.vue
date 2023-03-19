@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <header class="header">
-      <UserOverview></UserOverview>
-    </header>
-    <main class="main">
-      <div class="one">
-        <HotList class="hotList"></HotList>
-        <LineChart class="lineChart"></LineChart>
-      </div>
-      <div class="two">
-        <StayRanking></StayRanking>
-      </div>
-    </main>
+  <div class="container">
+    <UserOverview class="userover"></UserOverview>
+    <!-- <div class="userover"></div> -->
+    <!-- <div class="hotList"></div> -->
+    <HotList class="hotList"></HotList>
+    <!-- <div class="lineChart">sasa</div> -->
+    <LineChart class="lineChart"></LineChart>
+    <!-- <div class="stayranking"></div> -->
+    <StayRanking class="stayranking"></StayRanking>
   </div>
 </template>
 
@@ -22,21 +18,22 @@ import LineChart from './components/LineChart.vue'
 import StayRanking from './components/StayRanking.vue'
 </script>
 <style scoped>
-.header {
-  margin-bottom: 2rem;
+.container {
+  display: grid;
+  grid-template-columns: 40rem 1fr;
+  grid-template-rows: auto 2fr 2fr;
+  gap: 2rem;
 }
-
-.one {
-  display: flex;
+.userover {
+  grid-column: 1/-1;
 }
 .hotList {
-  width: 50%;
-  margin-right: 2rem;
+  grid-column: 1/2;
 }
 .lineChart {
-  width: 50%;
+  grid-column: 2/-1;
 }
-.two {
-  height: 6rem;
+.stayranking {
+  grid-column: 1/-1;
 }
 </style>

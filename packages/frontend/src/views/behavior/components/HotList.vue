@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="div">
     <header class="header">
       <div class="title">最近七天页面热度排行</div>
     </header>
@@ -63,6 +63,10 @@ const lotList = computed(() => {
 })
 </script>
 <style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+}
 .scrollbar-flex-content {
   height: 2rem;
   overflow: hidden;
@@ -76,13 +80,13 @@ const lotList = computed(() => {
   margin-bottom: 1rem;
   height: 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .title {
   font-weight: 600;
 }
 .main {
+  height: 100%;
   border: 1px solid var(--el-border-color);
   display: flex;
   flex-direction: column;

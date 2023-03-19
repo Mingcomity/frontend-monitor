@@ -57,6 +57,9 @@ const behavior = useBehavior()
 const { getUserOverview: data } = storeToRefs(behavior)
 </script>
 <style scoped>
+.cardList {
+  text-align: center;
+}
 .title {
   font-weight: 600;
 }
@@ -93,10 +96,5 @@ const { getUserOverview: data } = storeToRefs(behavior)
 
 .box-card {
   width: 30%;
-  margin: 0.5rem 0;
-}
-
-.cardList {
-  text-align: center;
 }
 </style>

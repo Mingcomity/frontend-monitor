@@ -1,10 +1,8 @@
 <template>
-  <div class="main">
-    <PerCard></PerCard>
-    <div class="card">
-      <Carousel class="carousel"></Carousel>
-      <ListVue class="list"></ListVue>
-    </div>
+  <div class="container">
+    <PerCard class="percard"></PerCard>
+    <Carousel class="carousel"></Carousel>
+    <ListVue class="list"></ListVue>
   </div>
 </template>
 
@@ -14,15 +12,14 @@ import Carousel from './components/Carousel.vue'
 import ListVue from './components/List.vue'
 </script>
 <style scoped>
-.card {
-  display: flex;
-  margin-top: 2rem;
+.container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 3rem;
 }
-.carousel {
-  width: 60%;
-  margin-right: 2rem;
-}
-.list {
-  width: 40%;
+.percard {
+  grid-column: 1/3;
 }
 </style>

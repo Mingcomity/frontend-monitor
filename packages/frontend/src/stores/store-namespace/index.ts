@@ -2,5 +2,6 @@ export const enum Names {
   User = 'User',
   Project = 'Project',
   Performance = 'Performance',
-  Behavior = 'Behavion'
+  Behavior = 'Behavion',
+  Exception = 'Exception'
 }

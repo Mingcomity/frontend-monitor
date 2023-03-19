@@ -1,10 +1,10 @@
 <template>
-  <div class="stay">
+  <div class="div">
     <header class="header">
       <div class="title">页面停留时间排行</div>
     </header>
     <main class="main">
-      <el-table :data="data" height="210">
+      <el-table :data="data" height="190">
         <el-table-column prop="from" label="来源 URL" />
         <el-table-column prop="duration" label="时间" width="180" />
       </el-table>
@@ -26,13 +26,16 @@ const data = computed(() => {
     const duration = processDuration(browse.value.rankingList[i].duration)
     arr.push({ from, duration })
   }
-  console.log(arr)
   return arr
 })
 </script>
 <style scoped>
+.div {
+  display: flex;
+  flex-direction: column;
+}
 .header {
-  margin: 1rem 0;
+  margin-bottom: 1rem;
   height: 2rem;
   display: flex;
   justify-content: space-between;
@@ -43,8 +46,6 @@ const data = computed(() => {
 }
 .main {
   border: 1px solid var(--el-border-color);
-}
-.stay {
-  height: 1rem;
+  height: 100%;
 }
 </style>

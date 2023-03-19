@@ -85,3 +85,13 @@ export const getResidenceTimeApi = (data: { id: number }): PromiseRes<number> =>
 export const getResidenceRecordingApi = (data: {
   id: number
 }): PromiseRes<Browse[]> => request.get(`/behavior/stay/${data.id}?list=1`)
+
+// 查询每日异常数据总和
+export const getDailyExceptionApi = (data: getException): PromiseRes<any[]> =>
+  request.get('/exception', data)
+// 查询异常数据列表
+export const getExceptionListApi = (data: {
+  params: {
+    id: number
+  }
+}): PromiseRes<ExceptionList[]> => request.get('/exception/recent', data)

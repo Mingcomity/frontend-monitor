@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { type AxiosHeaders } from 'axios'
 import Cookies from 'js-cookie'
 
 const instance = axios.create({
@@ -10,11 +9,12 @@ const instance = axios.create({
 // 拦截器 —— 请求前
 instance.interceptors.request.use(
   (config) => {
-    // 判断 post 请求，设置请求头部
+    // 判断 post 请求，设置请求体
     if (config.method === 'post' || config.method === 'put') {
       config.headers.set('content-type', 'application/x-www-form-urlencoded')
     }
     const token = Cookies.get('token')
+    // 判断token是否存在，对token进行携带
     if (token && config.headers) {
       typeof config.headers.set === 'function' &&
         config.headers.set('Authorization', token)
