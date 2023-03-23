@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import Cookie from 'js-cookie'
 import type { FormInstance, FormRules } from 'element-plus'
 import { adminLoginApi, adminRegisterApi } from '../../../api/api'
@@ -47,9 +47,14 @@ const router = useRouter()
 const props = withDefaults(
   defineProps<{
     type: string
+    userInfo: any
   }>(),
   {
-    type: 'login'
+    type: 'login',
+    userInfo: {
+      username: '',
+      pwd: ''
+    }
   }
 )
 const className = computed<string>(() => {
@@ -65,6 +70,10 @@ const ruleFormRef = ref<FormInstance>()
 const inputContent = reactive<AdminLogin>({
   username: '',
   pwd: ''
+})
+onMounted(() => {
+  inputContent.username = props.userInfo.username
+  inputContent.pwd = props.userInfo.pwd
 })
 // 用户名验证
 const verifyUsername = (

@@ -713,7 +713,7 @@ export const useExceptionStore = defineStore(Names.Exception, {
       const query: getException = {
         params: {
           id: project.theCurrentProject,
-          time: time ? time : '2023-02-11'
+          time: time ? time : '2023-03-20'
         }
       }
       const res = await getDailyExceptionApi(query)

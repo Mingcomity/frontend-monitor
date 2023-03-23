@@ -3,7 +3,13 @@
     <!-- 登录 -->
     <div class="forms-container">
       <div class="signin-signup">
-        <From type="login">
+        <From
+          type="login"
+          :user-info="{
+            username: 'admin',
+            pwd: 'qsxokn159357'
+          }"
+        >
           <template #title> 登录 </template>
           <template #btn> 登录 </template>
         </From>
@@ -52,21 +58,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import From from './components/Form.vue'
 const signUpMode = ref(false)
-
-const inputContent = reactive({
-  login: {
-    username: '',
-    pwd: ''
-  },
-  register: {
-    username: '',
-    pwd: '',
-    email: ''
-  }
-})
 </script>
 <style scoped>
 :deep(.input-icon) {

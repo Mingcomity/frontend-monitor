@@ -94,7 +94,6 @@ router.beforeEach(async (to, _from) => {
     if (token) {
       if (_from.name === 'login') {
         await project.getProjectInfo()
-        return true
       }
       switch (to.name) {
         case 'login':
