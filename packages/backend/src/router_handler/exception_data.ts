@@ -175,7 +175,7 @@ const project: Person = {
   // 查询异常数据列表
   queryRecentExceptionData(req, res) {
     let sql =
-      'SELECT DATA.msg,DATA.position,DATA.time,TYPE.name FROM exception_data as DATA JOIN exception_type as TYPE on DATA.type = TYPE.id WHERE DATA.proj = ? order by time desc'
+      'SELECT DATA.msg,DATA.position,DATA.time,TYPE.name FROM exception_data as DATA JOIN exception_type as TYPE on DATA.type = TYPE.id WHERE DATA.proj = ? order by time desc limit 0,50 '
     const data = [req.query.id]
     db.query(sql, data, (err, result) => {
       if (err) res.cc(500, err)
