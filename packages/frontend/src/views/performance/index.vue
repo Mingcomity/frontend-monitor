@@ -10,6 +10,17 @@
 import PerCard from './components/PerCard.vue'
 import Carousel from './components/Carousel.vue'
 import ListVue from './components/List.vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import { usePerformance } from '@/stores/index'
+import { Polling } from '@/utils/polling'
+const performance = usePerformance()
+const polling = new Polling([performance.getPerformance])
+onMounted(() => {
+  polling.created()
+})
+onBeforeUnmount(() => {
+  polling.destroyed()
+})
 </script>
 <style scoped>
 .container {

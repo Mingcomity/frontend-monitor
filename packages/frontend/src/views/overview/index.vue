@@ -8,11 +8,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
 import PerList from '@/views/performance/components/PerCard.vue'
 import Carousel from '@/views/performance/components/Carousel.vue'
 import BehLineChart from '@/views/behavior/components/LineChart.vue'
 import ExcepCharts from '@/views/exception/components/ExceptionCharts.vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import { useBehavior, usePerformance, useExceptionStore } from '@/stores/index'
+import { Polling } from '@/utils/polling'
+const behavior = useBehavior()
+const performance = usePerformance()
+const exception = useExceptionStore()
+const polling = new Polling([
+  performance.getPerformance,
+  behavior.getBehvior,
+  exception.getException
+])
+onMounted(() => {
+  polling.created()
+})
+onBeforeUnmount(() => {
+  polling.destroyed()
+})
 </script>
 <style scoped>
 .containerDiv {

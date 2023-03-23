@@ -12,6 +12,17 @@ import UserOverview from './components/UserOverview.vue'
 import HotList from './components/HotList.vue'
 import LineChart from './components/LineChart.vue'
 import StayRanking from './components/StayRanking.vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import { useBehavior } from '@/stores/index'
+import { Polling } from '@/utils/polling'
+const behavior = useBehavior()
+const polling = new Polling([behavior.getBehvior])
+onMounted(() => {
+  polling.created()
+})
+onBeforeUnmount(() => {
+  polling.destroyed()
+})
 </script>
 <style scoped>
 .container {

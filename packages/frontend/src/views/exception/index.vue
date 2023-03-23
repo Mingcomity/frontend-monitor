@@ -6,9 +6,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
 import ExceptionCharts from './components/ExceptionCharts.vue'
 import ExceptionList from './components/ExceptionList.vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import { useExceptionStore } from '@/stores/index'
+import { Polling } from '@/utils/polling'
+const exception = useExceptionStore()
+const polling = new Polling([exception.getException])
+onMounted(() => {
+  polling.created()
+})
+onBeforeUnmount(() => {
+  polling.destroyed()
+})
 </script>
 <style scoped>
 .container {
