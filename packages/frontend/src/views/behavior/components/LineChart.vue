@@ -118,7 +118,7 @@ onMounted(async () => {
   flex-direction: column;
 }
 .chart {
-  width: 100%;
+  width: 50rem;
   height: 100%;
 }
 .header {

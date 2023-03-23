@@ -72,8 +72,11 @@ const verifyUsername = (
   value: string,
   callback: (msg?: string) => void
 ) => {
+  const z = /^\w{3,20}$/
   if (!value) {
     return callback('请输入用户名')
+  } else if (!z.exec(value)) {
+    return callback('数字、26个英文字母或者下划线组成')
   } else {
     callback()
   }

@@ -19,7 +19,7 @@ const store = createPinia()
 store.use(
   piniaPlugin({
     key: 'pinia',
-    type: 'sessionStorage',
+    type: 'localStorage',
     storeKey: [
       'User-username',
       'Project-projectArr',

@@ -50,7 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
 import { useProjectStore, useUserStore } from '@/stores/index'
 import { storeToRefs } from 'pinia'
 import useClipboard from 'vue-clipboard3'
@@ -86,11 +85,12 @@ const addProject = async () => {
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        inputPattern: /^[\u4E00-\u9FA5A-Za-z0-9_]+$/,
         inputValidator: (value: string) => {
           if (value.trim() === '') return false
           return true
         },
-        inputErrorMessage: '项目名不能为空！'
+        inputErrorMessage: '中文、英文、数字包括下划线组成！'
       }
     )
     const data: AddProject = {
@@ -116,11 +116,12 @@ const reviseProjectName = async (id: number) => {
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        inputPattern: /^[\u4E00-\u9FA5A-Za-z0-9_]+$/,
         inputValidator: (value: string) => {
           if (value.trim() === '') return false
           return true
         },
-        inputErrorMessage: '项目名不能为空！'
+        inputErrorMessage: '中文、英文、数字包括下划线组成！'
       }
     )
     const data: AddProject = {

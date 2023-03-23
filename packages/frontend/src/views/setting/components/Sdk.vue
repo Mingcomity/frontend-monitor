@@ -35,6 +35,7 @@ const open = () => {
     type: 'warning'
   })
     .then(() => {
+      window.localStorage.clear();
       Cookies.remove('token')
       router.push('/login')
       //@ts-ignore

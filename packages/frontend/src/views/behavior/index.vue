@@ -1,12 +1,8 @@
 <template>
   <div class="container">
     <UserOverview class="userover"></UserOverview>
-    <!-- <div class="userover"></div> -->
-    <!-- <div class="hotList"></div> -->
     <HotList class="hotList"></HotList>
-    <!-- <div class="lineChart">sasa</div> -->
     <LineChart class="lineChart"></LineChart>
-    <!-- <div class="stayranking"></div> -->
     <StayRanking class="stayranking"></StayRanking>
   </div>
 </template>

@@ -86,7 +86,8 @@ const reviseUsername = async () => {
     const value = await ElMessageBox.prompt('请输入新的用户名', '修改用户名', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      inputErrorMessage: '用户名不能为空！',
+      inputErrorMessage: '数字、26个英文字母或者下划线组成',
+      inputPattern: /^\w{3,20}$/,
       inputValidator: (value: string) => {
         if (value.trim() === '') return false
         return true
