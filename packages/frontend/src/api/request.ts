@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:1205',
+  baseURL: 'http://114.132.223.185:1110',
   timeout: 15000
 })
 

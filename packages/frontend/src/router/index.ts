@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory
+} from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Cookies from 'js-cookie'
 import {
@@ -78,7 +82,7 @@ const pathArr = [
   '/login'
 ]
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 

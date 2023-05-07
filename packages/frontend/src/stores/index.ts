@@ -108,7 +108,7 @@ export const useProjectStore = defineStore(Names.Project, {
           id: data[i].id,
           numbering: i + 1,
           name: data[i].name,
-          SdkScript: `<script crossorigin report="http://120.79.27.173:2336" src="http://120.79.27.173:2349/index.js" id="__monitor" key="${data[i].key}"></script>`
+          SdkScript: `<script crossorigin report="http://114.132.223.185:1110" src="http://114.132.223.185:1112/js/index.js" id="__monitor" key="${data[i].key}"></script>`
         })
       }
     },
