@@ -187,7 +187,7 @@ const echartsDisposition = (rawData: any): echarts.EChartsOption => {
         // 是否显示
         show: true,
         // 坐标轴数据类型
-        type: 'category',
+        type: 'time',
         // 名称
         name: '时间',
         // 坐标轴名称位置

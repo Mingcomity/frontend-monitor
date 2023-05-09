@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import {
   createRouter,
   createWebHistory,
   createWebHashHistory
 } from 'vue-router'
+=======
+import { createRouter, createWebHashHistory } from 'vue-router'
+>>>>>>> feature-frontend
 import type { RouteRecordRaw } from 'vue-router'
 import Cookies from 'js-cookie'
 import {
@@ -86,7 +90,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, _from) => {
+router.beforeEach((to, _from) => {
   if (!pathArr.some((val) => val === to.fullPath)) return 'home'
   try {
     const token = Cookies.get('token')
@@ -97,28 +101,28 @@ router.beforeEach(async (to, _from) => {
     const user = useUserStore()
     if (token) {
       if (_from.name === 'login') {
-        await project.getProjectInfo()
+        project.getProjectInfo()
       }
       switch (to.name) {
         case 'login':
           return '/home'
         case 'home/overview':
           //放在引入后会导致pinia实例还未挂载就调用，所以需要在此处调用
-          await performance.getPerformance()
-          await behavior.getBehvior()
-          await exception.getException()
+          performance.getPerformance()
+          behavior.getBehvior()
+          exception.getException()
           return true
         case 'home/exception':
-          await exception.getException()
+          exception.getException()
           return true
         case 'home/behavior':
-          await behavior.getBehvior()
+          behavior.getBehvior()
           return true
         case 'home/performance':
-          await performance.getPerformance()
+          performance.getPerformance()
           return true
         case 'home/setting':
-          await user.getUserInfoAPi()
+          user.getUserInfoAPi()
           return
         default:
           break
@@ -130,7 +134,8 @@ router.beforeEach(async (to, _from) => {
       return 'login'
     }
   } catch (error) {
-    console.error(error)
+    //@ts-ignore
+    ElMessage.error('请求发生错误！')
   }
 })
 export default router

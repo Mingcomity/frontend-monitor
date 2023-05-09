@@ -31,7 +31,69 @@ instance.interceptors.response.use(
     return result
   },
   (err) => {
-    return Promise.reject(err)
+    if (err.code === 'ECONNABORTED') {
+      //@ts-ignore
+      ElMessage.error('请求超时!')
+    } else if (err.response) {
+      if (err.response.statusText === '') {
+        //@ts-ignore
+        ElMessage.error(err.message)
+      }
+      // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+      switch (err.response.status) {
+        case 400:
+          //@ts-ignore
+          ElMessage.error('报文有误！')
+          break
+        case 401:
+          //@ts-ignore
+          ElMessage.error('未授权！')
+          break
+        case 403:
+          //@ts-ignore
+          ElMessage.error('没有权限访问！')
+          break
+        case 404:
+          //@ts-ignore
+          ElMessage.error('找不到请求资源！')
+          break
+        default:
+          //@ts-ignore
+          ElMessage.error(err.request.statusText)
+          break
+      }
+    } else if (err.request) {
+      // 请求已经成功发起，但没有收到响应
+      if (err.response.statusText === '') {
+        //@ts-ignore
+        ElMessage.error(err.message)
+      }
+      switch (err.request.status) {
+        case 400:
+          //@ts-ignore
+          ElMessage.error('报文有误！')
+          break
+        case 401:
+          //@ts-ignore
+          ElMessage.error('未授权！')
+          break
+        case 403:
+          //@ts-ignore
+          ElMessage.error('没有权限访问！')
+          break
+        case 404:
+          //@ts-ignore
+          ElMessage.error('找不到请求资源！')
+          break
+        default:
+          //@ts-ignore
+          ElMessage.error(err.request.statusText)
+          break
+      }
+    } else {
+      //@ts-ignore
+      ElMessage.error(err.message)
+    }
   }
 )
 
